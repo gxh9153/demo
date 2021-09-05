@@ -39,7 +39,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 //get方式跳转页面   需要重写实线AuthorizeSuccessHandler类
                 .successHandler(new MyAuthorizeSuccessHandler("http://www.baidu.com"))
                 //登录失败后跳转到失败页面
-                .failureForwardUrl("/toError");
+                //.failureForwardUrl("/toError")
+                .failureHandler(new MyAuthorizeFailureHandler("/error.html"))
+                ;
 
         for (String url : ignoreUrlsConfig().getUrls()) {
             registry.antMatchers(url).permitAll();
