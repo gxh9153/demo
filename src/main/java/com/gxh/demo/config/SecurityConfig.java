@@ -52,6 +52,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 //放行登录页面
                 .antMatchers("/login.html").permitAll()
                 .antMatchers("/error.html").permitAll()
+                //  ** 表示该目录下全部都是  * 0个或多个   ？匹配一个字符
+                .antMatchers("/images/**").permitAll()
+                //.regexMatchers() 正则表达式
+                //.mvcMatchers().servletPath("/XXX") //匹配XXX下面所有
                 //所有请求都需要被认证
                 .anyRequest().authenticated();
 
