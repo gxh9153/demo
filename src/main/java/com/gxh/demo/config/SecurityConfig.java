@@ -35,7 +35,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 //自定义登录逻辑
                 .loginProcessingUrl("/login")//与Controller 中的/login 无关
                 //登录成功后跳转的页面
-                .successForwardUrl("/toMain")//Post 请求方式跳转
+               // .successForwardUrl("/toMain")//Post 请求方式跳转
+                //get方式跳转页面   需要重写实线AuthorizeSuccessHandler类
+                .successHandler(new MyAuthorizeSuccessHandler("http://www.baidu.com"))
                 //登录失败后跳转到失败页面
                 .failureForwardUrl("/toError");
 
