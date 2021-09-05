@@ -32,15 +32,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.formLogin().
                 //自定义登录页面
                 loginPage("/login.html")
-                //自定义登录逻辑
+                //执行自定义登录逻辑
                 .loginProcessingUrl("/login")//与Controller 中的/login 无关
                 //登录成功后跳转的页面
-               // .successForwardUrl("/toMain")//Post 请求方式跳转
+                .successForwardUrl("/toMain")//Post 请求方式跳转
                 //get方式跳转页面   需要重写实线AuthorizeSuccessHandler类
-                .successHandler(new MyAuthorizeSuccessHandler("http://www.baidu.com"))
+                //.successHandler(new MyAuthorizeSuccessHandler("http://www.baidu.com"))
                 //登录失败后跳转到失败页面
-                //.failureForwardUrl("/toError")
-                .failureHandler(new MyAuthorizeFailureHandler("/error.html"))
+                .failureForwardUrl("/toError")
+               // .failureHandler(new MyAuthorizeFailureHandler("/error.html"))
                 ;
 
         for (String url : ignoreUrlsConfig().getUrls()) {
@@ -57,6 +57,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 //.regexMatchers() 正则表达式
                 //.mvcMatchers().servletPath("/XXX") //匹配XXX下面所有
                 //所有请求都需要被认证
+                //.antMatchers("/main1.html").hasAuthority("admiN")  权限控制，单一匹配
+                //.antMatchers("/main1.html").hasAnyAuthority("admin,Admin") //多个匹配，只要存在一个就行
+                //根据角色匹配，不能以ROLE_开头，严格区分大小写
+                //.antMatchers("/main1.html").hasRole("abc")
                 .anyRequest().authenticated();
 
         //关闭跨域

@@ -15,5 +15,9 @@ public class LoginController {
     public String toError(){
         return "redirect:error.html";
     }
+    @RequestMapping("/toMain1")
+    public String toMain1(){
+        return "redirect:main1.html";
+    }
 
 }
