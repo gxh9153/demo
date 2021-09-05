@@ -1,6 +1,7 @@
 package com.gxh.demo.config;
 
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -16,6 +17,9 @@ import java.util.List;
  */
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
+    @Autowired
+    private MyAccessDeniedHandler myAccessDeniedHandler;
 
     @Bean
     public PasswordEncoder pw(){
@@ -35,13 +39,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 //执行自定义登录逻辑
                 .loginProcessingUrl("/login")//与Controller 中的/login 无关
                 //登录成功后跳转的页面
-                .successForwardUrl("/toMain")//Post 请求方式跳转
+               // .successForwardUrl("/toMain")//Post 请求方式跳转
                 //get方式跳转页面   需要重写实线AuthorizeSuccessHandler类
-                //.successHandler(new MyAuthorizeSuccessHandler("http://www.baidu.com"))
+                .successHandler(new MyAuthorizeSuccessHandler("/main.html"))
                 //登录失败后跳转到失败页面
                 .failureForwardUrl("/toError")
                // .failureHandler(new MyAuthorizeFailureHandler("/error.html"))
                 ;
+        //异常处理
+        http.exceptionHandling().accessDeniedHandler(myAccessDeniedHandler);
 
         for (String url : ignoreUrlsConfig().getUrls()) {
             registry.antMatchers(url).permitAll();
@@ -60,8 +66,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 //.antMatchers("/main1.html").hasAuthority("admiN")  权限控制，单一匹配
                 //.antMatchers("/main1.html").hasAnyAuthority("admin,Admin") //多个匹配，只要存在一个就行
                 //根据角色匹配，不能以ROLE_开头，严格区分大小写
-                //.antMatchers("/main1.html").hasRole("abc")
-                .anyRequest().authenticated();
+                //.antMatchers("/main1.html").hasRole("abC")
+                //.anyRequest().authenticated()
+                 .anyRequest().access("@myServiceImpl.hasPermission(request,authentication)");
 
         //关闭跨域
         http.csrf().disable();
